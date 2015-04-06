@@ -11,4 +11,9 @@
     <string name="action_example">Example action</string>
 
     <string name="action_settings">Settings</string>
+    <string name="button_ok">OK</string>
+    <string name="error_title">Something bad happen</string>
+    <string name="error_network">Please check your network connection.</string>
+    <string name="error_credentials">Your credentials are not valied. Please sign in again.</string>
+    <string name="error_invalid_response">The response from server is not valid. Please try it again.\\n\\nException: %s</string>
 </resources>

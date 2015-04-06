@@ -7,7 +7,7 @@ import com.arcao.trackables.preference.PreferenceHelper;
 
 import javax.inject.Inject;
 
-public class LogInActivity extends ActionBarActivity {
+public class WelcomeActivity extends ActionBarActivity {
 	@Inject
 	AccountPreferenceHelper accountPreferenceHelper;
 

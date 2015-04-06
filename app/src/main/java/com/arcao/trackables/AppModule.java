@@ -1,6 +1,5 @@
 package com.arcao.trackables;
 
-import android.app.Application;
 import dagger.Module;
 import dagger.Provides;
 
@@ -13,7 +12,7 @@ public final class AppModule {
 	}
 
 	@Provides
-	Application provideApplication() {
+	App provideApp() {
 		return app;
 	}
 }

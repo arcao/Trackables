@@ -1,26 +1,26 @@
 package com.arcao.trackables;
 
-import com.arcao.trackables.preference.PreferenceComponent;
+import com.arcao.trackables.exception.ExceptionModule;
+import com.arcao.trackables.geocaching.GeocachingModule;
 import com.arcao.trackables.preference.PreferenceModule;
-import com.arcao.trackables.util.di.scope.ApplicationScope;
 import dagger.Component;
 
-@ApplicationScope
+import javax.inject.Singleton;
+
+@Singleton
 @Component(
-				dependencies = {
-								PreferenceComponent.class
-				},
 				modules = {
 								AppModule.class,
+								ExceptionModule.class,
+								GeocachingModule.class,
 								PreferenceModule.class
 				}
 )
 public interface AppComponent extends AppGraph {
-	public final static class Initializer {
+	final class Initializer {
 		public static AppComponent init(App app) {
 			return Dagger_AppComponent.builder()
 							.appModule(new AppModule(app))
-							.preferenceComponent(PreferenceComponent.Initializer.init(app))
 							.build();
 		}
 		private Initializer() {} // No instances.

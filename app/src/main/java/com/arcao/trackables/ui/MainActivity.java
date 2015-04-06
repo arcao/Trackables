@@ -29,7 +29,7 @@ public class MainActivity extends MaterialNavigationDrawer<Fragment> {
 		super.onPostCreate(savedInstanceState, persistentState);
 
 		if (!accountPreferenceHelper.isAccount()) {
-			startActivity(new Intent(this, LogInActivity.class));
+			startActivity(new Intent(this, WelcomeActivity.class));
 			finish();
 			return;
 		}
