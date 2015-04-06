@@ -9,8 +9,9 @@ import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.preference.PreferenceHelper;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.model.*;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
 
@@ -23,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
 	@Inject
 	PreferenceHelper preferenceHelper;
 
+	private AccountHeader.Result headerResult = null;
 	private Drawer.Result result = null;
 
 	@Override
@@ -41,14 +43,37 @@ public class MainActivity extends ActionBarActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		final IProfile profile = new ProfileDrawerItem().withName("Arcao").withEmail("arcao@arcao.com").withIcon("http://example.com/icon.png");
+
+		// Create the AccountHeader
+		headerResult = new AccountHeader()
+						.withActivity(this)
+						.withHeaderBackground(R.drawable.header)
+						.withSelectionListEnabledForSingleProfile(false)
+						.withCompactStyle(true)
+						.addProfiles(
+										profile
+						)
+						.withOnAccountHeaderListener((view, profile1, current) -> {
+							if (profile1 instanceof ProfileSettingDrawerItem) {
+								return false;
+							}
+							return false;
+						})
+						.withSavedInstance(savedInstanceState)
+						.build();
+
+
 		//Create the drawer
 		result = new Drawer()
 						.withActivity(this)
 						.withToolbar(toolbar)
+						.withAccountHeader(headerResult)
 						.addDrawerItems(
 										new PrimaryDrawerItem().withName(R.string.drawer_item_own).withIcon(FontAwesome.Icon.faw_home),
 										new PrimaryDrawerItem().withName(R.string.drawer_item_favorited).withIcon(FontAwesome.Icon.faw_gamepad),
-										new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog)
+										new DividerDrawerItem(),
+										new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withCheckable(false)
 						) // add the items we want to use with our Drawer
 						.withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
 							if (drawerItem != null && drawerItem instanceof Nameable) {
