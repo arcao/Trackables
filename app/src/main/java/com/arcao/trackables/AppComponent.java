@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 public interface AppComponent extends AppGraph {
 	final class Initializer {
 		public static AppComponent init(App app) {
-			return Dagger_AppComponent.builder()
+			return DaggerAppComponent.builder()
 							.appModule(new AppModule(app))
 							.build();
 		}

@@ -19,10 +19,10 @@ public interface ActivityComponent {
 	void inject(Injectable injectable);
 
 
-	final static class Initializer {
+	final class Initializer {
 		public static ActivityComponent init(Context context) {
 			AppComponent appComponent = App.get(context.getApplicationContext()).component();
-			return Dagger_ActivityComponent.builder()
+			return DaggerActivityComponent.builder()
 							.appComponent(appComponent)
 							.build();
 		}
