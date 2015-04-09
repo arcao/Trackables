@@ -31,7 +31,7 @@ public class App extends Application {
 			// TODO Timber.plant(new CrashlyticsTree());
 		}
 
-		buildComponentAndInject();
+		component().inject(this);
 
 		//initialize and create the image loader logic
 		DrawerImageLoader.init(new DrawerImageLoader.IDrawerImageLoader() {
@@ -47,13 +47,13 @@ public class App extends Application {
 		});
 	}
 
-	public void buildComponentAndInject() {
-		component = AppComponent.Initializer.init(this);
-		component.inject(this);
-	}
 	public AppComponent component() {
+		if (component == null) {
+			component = AppComponent.Initializer.init(this);
+		}
 		return component;
 	}
+
 	public static App get(Context context) {
 		return (App) context.getApplicationContext();
 	}

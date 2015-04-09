@@ -1,7 +1,6 @@
 package com.arcao.trackables.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +17,11 @@ import android.widget.FrameLayout;
 import com.arcao.trackables.AppConstants;
 import com.arcao.trackables.R;
 import com.arcao.trackables.ui.ErrorActivity;
+import com.arcao.trackables.ui.WelcomeActivity;
+import com.arcao.trackables.ui.WelcomeActivityComponent;
 import com.arcao.trackables.ui.task.OAuthLoginTask;
 import timber.log.Timber;
 
-import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskListener {
@@ -29,12 +29,8 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 	private static final String STATE_PROGRESS_VISIBLE = "STATE_PROGRESS_VISIBLE";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 
-	public interface DialogListener {
-		void onLoginFinished(Intent errorIntent);
-	}
-
+	private WelcomeActivityComponent component;
 	private OAuthLoginTask mTask;
-	private WeakReference<DialogListener> mDialogListenerRef;
 	private WebView mWebView = null;
 	private View mProgressHolder = null;
 	private Bundle mLastInstanceState;
@@ -52,19 +48,11 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 		// clear geocaching.com cookies
 		//App.get(getActivity()).clearGeocachingCookies();
 
-		mTask = new OAuthLoginTask(getActivity(), this);
+		component = ((WelcomeActivity)getActivity()).component();
+		component.inject(this);
+
+		mTask = new OAuthLoginTask(component, this);
 		mTask.execute();
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		try {
-			mDialogListenerRef = new WeakReference<>((DialogListener) activity);
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement OnTaskFinishListener");
-		}
 	}
 
 	@Override
@@ -84,9 +72,15 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 
 	@Override
 	public void onTaskFinished(Intent errorIntent) {
-		DialogListener listener = mDialogListenerRef.get();
-		if (listener != null) {
-			listener.onLoginFinished(errorIntent);
+		WelcomeActivity activity = (WelcomeActivity) getActivity();
+		if (activity == null)
+			return;
+
+		if (errorIntent == null) {
+			activity.switchTo(WelcomeActivity.WelcomeState.FINISHED);
+		}
+		else {
+			activity.showError(errorIntent);
 		}
 	}
 
@@ -155,7 +149,7 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 					mProgressHolder.setVisibility(View.VISIBLE);
 				}
 
-				mTask = new OAuthLoginTask(getActivity(), OAuthLoginFragment.this);
+				mTask = new OAuthLoginTask(component, OAuthLoginFragment.this);
 				mTask.execute(uri.getQueryParameter(OAUTH_VERIFIER));
 
 				return true;

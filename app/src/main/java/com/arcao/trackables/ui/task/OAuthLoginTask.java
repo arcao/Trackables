@@ -1,6 +1,5 @@
 package com.arcao.trackables.ui.task;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import com.arcao.geocaching.api.GeocachingApi;
@@ -8,8 +7,7 @@ import com.arcao.geocaching.api.data.DeviceInfo;
 import com.arcao.geocaching.api.data.UserProfile;
 import com.arcao.trackables.exception.ExceptionHandler;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
-import com.arcao.trackables.ui.ActivityComponent;
-import com.arcao.trackables.util.di.Injectable;
+import com.arcao.trackables.ui.WelcomeActivityComponent;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
@@ -19,10 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.lang.ref.WeakReference;
 
-public class OAuthLoginTask extends AsyncTask<String, Void, String[]> implements Injectable {
+public class OAuthLoginTask extends AsyncTask<String, Void, String[]> {
 	public interface TaskListener {
 		void onLoginUrlAvailable(String url);
-
 		void onTaskFinished(Intent errorIntent);
 	}
 
@@ -40,10 +37,9 @@ public class OAuthLoginTask extends AsyncTask<String, Void, String[]> implements
 	private final WeakReference<TaskListener> mTaskListenerRef;
 	private Throwable throwable = null;
 
-	public OAuthLoginTask(Context context, TaskListener listener) {
+	public OAuthLoginTask(WelcomeActivityComponent component, TaskListener listener) {
+		component.inject(this);
 		mTaskListenerRef = new WeakReference<>(listener);
-
-		ActivityComponent.Initializer.init(context.getApplicationContext()).inject(this);
 	}
 
 

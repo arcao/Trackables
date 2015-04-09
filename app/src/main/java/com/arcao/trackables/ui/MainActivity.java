@@ -1,5 +1,6 @@
 package com.arcao.trackables.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,16 +28,17 @@ public class MainActivity extends ActionBarActivity {
 	private AccountHeader.Result headerResult = null;
 	private Drawer.Result result = null;
 
+	private MainActivityComponent component;
+	public MainActivityComponent component() {
+		if (component == null)
+			component = MainActivityComponent.Initializer.init(this);
+		return component;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ActivityComponent.Initializer.init(this).inject(this);
-
-		/*if (!accountPreferenceHelper.isAccount()) {
-			startActivity(new Intent(this, WelcomeActivity.class));
-			finish();
-			return;
-		}*/
+		component().inject(this);
 
 		setContentView(R.layout.activity_main);
 
@@ -95,10 +97,16 @@ public class MainActivity extends ActionBarActivity {
 
 		//react on the keyboard
 		//result.keyboardSupportEnabled(this, true);
+
+		if (!accountPreferenceHelper.isAccount()) {
+			startActivity(new Intent(this, WelcomeActivity.class));
+			return;
+		}
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState = result.saveInstanceState(outState);
+		outState = headerResult.saveInstanceState(outState);
 		super.onSaveInstanceState(outState);
 	}
 	@Override
