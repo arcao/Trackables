@@ -12,7 +12,7 @@ public interface ExceptionComponent {
 	final class Initializer {
 		public static ExceptionComponent init(Context context) {
 			return DaggerExceptionComponent.builder()
-							.appComponent(App.get(context.getApplicationContext()).component())
+							.appComponent(App.get(context).component())
 							.build();
 		}
 		private Initializer() {} // No instances.

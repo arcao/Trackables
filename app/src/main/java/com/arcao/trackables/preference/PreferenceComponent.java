@@ -13,7 +13,7 @@ public interface PreferenceComponent {
 	final class Initializer {
 		public static PreferenceComponent init(Context context) {
 			return DaggerPreferenceComponent.builder()
-							.appComponent(App.get(context.getApplicationContext()).component())
+							.appComponent(App.get(context).component())
 							.build();
 		}
 		private Initializer() {} // No instances.
