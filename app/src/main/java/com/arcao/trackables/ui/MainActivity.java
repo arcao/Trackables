@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import com.arcao.geocaching.api.data.type.MemberType;
 import com.arcao.trackables.R;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.preference.PreferenceHelper;
@@ -12,9 +15,9 @@ import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.*;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
+import timber.log.Timber;
 
 import javax.inject.Inject;
 
@@ -24,6 +27,9 @@ public class MainActivity extends ActionBarActivity {
 
 	@Inject
 	PreferenceHelper preferenceHelper;
+
+	@InjectView(R.id.toolbar)
+	Toolbar toolbar;
 
 	private AccountHeader.Result headerResult = null;
 	private Drawer.Result result = null;
@@ -42,10 +48,8 @@ public class MainActivity extends ActionBarActivity {
 
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		ButterKnife.inject(this);
 		setSupportActionBar(toolbar);
-
-		final IProfile profile = new ProfileDrawerItem().withName("Arcao").withEmail("arcao@arcao.com").withIcon("http://example.com/icon.png");
 
 		// Create the AccountHeader
 		headerResult = new AccountHeader()
@@ -53,9 +57,6 @@ public class MainActivity extends ActionBarActivity {
 						.withHeaderBackground(R.drawable.header)
 						.withSelectionListEnabledForSingleProfile(false)
 						.withCompactStyle(true)
-						.addProfiles(
-										profile
-						)
 						.withOnAccountHeaderListener((view, profile1, current) -> {
 							if (profile1 instanceof ProfileSettingDrawerItem) {
 								return false;
@@ -100,9 +101,29 @@ public class MainActivity extends ActionBarActivity {
 
 		if (!accountPreferenceHelper.isAccount()) {
 			startActivity(new Intent(this, WelcomeActivity.class));
-			return;
 		}
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		headerResult.clear();
+		headerResult.addProfiles(createProfile());
+	}
+
+	private ProfileDrawerItem createProfile() {
+		if (accountPreferenceHelper.isAccount()) {
+			Timber.d(accountPreferenceHelper.getAvatarUrl());
+			return new ProfileDrawerItem()
+							.withName(accountPreferenceHelper.getUserName())
+							.withEmail(accountPreferenceHelper.getMemberType() == MemberType.Premium ? "Premium member" : "Member")
+							.withIcon(accountPreferenceHelper.getAvatarUrl());
+		} else {
+			return new ProfileDrawerItem();
+		}
+	}
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState = result.saveInstanceState(outState);

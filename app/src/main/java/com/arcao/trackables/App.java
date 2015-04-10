@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 import com.arcao.trackables.preference.PreferenceHelper;
+import com.arcao.trackables.ui.util.picasso.CropSquareTransformation;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
 import timber.log.Timber;
@@ -37,7 +38,7 @@ public class App extends Application {
 		DrawerImageLoader.init(new DrawerImageLoader.IDrawerImageLoader() {
 			@Override
 			public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-				Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).into(imageView);
+				Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).transform(new CropSquareTransformation()).into(imageView);
 			}
 
 			@Override
