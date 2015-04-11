@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
 			Timber.d(accountPreferenceHelper.getAvatarUrl());
 			return new ProfileDrawerItem()
 							.withName(accountPreferenceHelper.getUserName())
-							.withEmail(accountPreferenceHelper.getMemberType() == MemberType.Premium ? "Premium member" : "Member")
+							.withEmail(accountPreferenceHelper.getMemberType() == MemberType.Premium ? getString(R.string.member_premium) : getString(R.string.member_basic))
 							.withIcon(accountPreferenceHelper.getAvatarUrl());
 		} else {
 			return new ProfileDrawerItem();
