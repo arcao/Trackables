@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="2dp"
     app:cardElevation="0dp">
@@ -12,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minHeight="100dp"
-        android:clickable="true">
+        android:clickable="false">
 
         <ImageView
             android:layout_width="100dp"
