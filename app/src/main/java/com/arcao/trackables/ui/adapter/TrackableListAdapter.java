@@ -75,8 +75,8 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 			imageView.setScaleType(ImageView.ScaleType.CENTER);
 
 			if (trackable.getImages().size() > 0) {
-				Timber.d("Loading image: %s", trackable.getImages().get(0).getThumbUrl());
-				picasso.load(trackable.getImages().get(0).getThumbUrl())
+				Timber.d("Loading image: %s", trackable.getImages().get(0).getUrl());
+				picasso.load(trackable.getImages().get(0).getUrl())
 								.resize(imageView.getLayoutParams().width, imageView.getLayoutParams().height)
 								.centerCrop().into(imageView);
 			} else {
