@@ -1,9 +1,7 @@
 package com.arcao.trackables.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
@@ -11,7 +9,11 @@ import butterknife.InjectView;
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.trackables.R;
 import com.arcao.trackables.ui.MainActivityComponent;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.typeface.IIcon;
 import com.squareup.picasso.Picasso;
+import org.apache.commons.lang3.StringUtils;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -54,10 +56,13 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 		protected ImageView imageView;
 
 		@InjectView(R.id.title)
-		protected TextView titleView;
+		protected TextView titleTextView;
 
-		@InjectView(R.id.trackableCode)
-		protected TextView trackableCodeView;
+		@InjectView(R.id.trackableCodeText)
+		protected TextView trackableCodeTextView;
+
+		@InjectView(R.id.positionText)
+		protected TextView positionTextView;
 
 		@Inject
 		protected Picasso picasso;
@@ -69,8 +74,12 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 		}
 
 		public void bind(Trackable trackable) {
-			titleView.setText(trackable.getName());
-			trackableCodeView.setText(trackable.getTrackingNumber());
+			titleTextView.setText(trackable.getName());
+
+
+
+			applyIcon(trackableCodeTextView, GoogleMaterial.Icon.gmd_label);
+			trackableCodeTextView.setText(trackable.getTrackingNumber());
 
 			imageView.setScaleType(ImageView.ScaleType.CENTER);
 
@@ -83,6 +92,20 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 				Timber.d("Loading image: %s", trackable.getTrackableTypeImage());
 				picasso.load(trackable.getTrackableTypeImage()).resize(dpToPx(32), dpToPx(32)).into(imageView);
 			}
+
+
+			if (!StringUtils.isEmpty(trackable.getCurrentCacheCode())) {
+				applyIcon(positionTextView, GoogleMaterial.Icon.gmd_place);
+				positionTextView.setText(trackable.getCurrentCacheCode());
+			} else if (trackable.getCurrentOwner() != null) {
+				applyIcon(positionTextView, GoogleMaterial.Icon.gmd_person);
+				positionTextView.setText(trackable.getCurrentOwner().getUserName());
+			}
+		}
+
+		private void applyIcon(TextView target, IIcon icon) {
+			target.setCompoundDrawables(
+							new IconicsDrawable(target.getContext(), icon).color(target.getCurrentTextColor()).sizeDp(10).iconOffsetYDp(1), null, null, null);
 		}
 
 		private int dpToPx(int dp) {
