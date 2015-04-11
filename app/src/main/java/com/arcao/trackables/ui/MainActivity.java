@@ -11,6 +11,7 @@ import com.arcao.geocaching.api.data.type.MemberType;
 import com.arcao.trackables.R;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.preference.PreferenceHelper;
+import com.arcao.trackables.ui.fragment.TrackableListFragment;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -101,7 +102,10 @@ public class MainActivity extends ActionBarActivity {
 
 		if (!accountPreferenceHelper.isAccount()) {
 			startActivity(new Intent(this, WelcomeActivity.class));
+			return;
 		}
+
+		getFragmentManager().beginTransaction().replace(R.id.fragment_container, new TrackableListFragment()).commit();
 	}
 
 	@Override

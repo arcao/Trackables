@@ -1,11 +1,13 @@
 package com.arcao.trackables;
 
+import com.arcao.trackables.data.DataModule;
 import com.arcao.trackables.exception.ExceptionModule;
 import com.arcao.trackables.geocaching.GeocachingModule;
 import com.arcao.trackables.preference.PreferenceModule;
 import dagger.Component;
 
 @Component(modules = {
+				DataModule.class,
 				AppModule.class,
 				ExceptionModule.class,
 				GeocachingModule.class,
