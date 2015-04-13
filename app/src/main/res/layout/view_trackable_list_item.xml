@@ -13,12 +13,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="100dp"
+        android:minHeight="72dp"
         android:clickable="false">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:id="@+id/image" />
 
         <RelativeLayout
@@ -34,25 +34,30 @@
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, donec at mattis tortor"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:fontFamily="sans-serif-light"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/trackableCodeText"
-                android:layout_below="@id/title"
-                android:drawablePadding="4dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:drawablePadding="6dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:fontFamily="sans-serif-light"
                 tools:text="TB12345"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:id="@+id/positionText"
                 android:layout_alignParentLeft="true"
-                android:drawablePadding="4dp"
+                android:drawablePadding="6dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:id="@+id/positionText"/>
+                android:fontFamily="sans-serif-light"
+                tools:text="GC123456"/>
         </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -105,7 +105,7 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 
 		private void applyIcon(TextView target, IIcon icon) {
 			target.setCompoundDrawables(
-							new IconicsDrawable(target.getContext(), icon).color(target.getCurrentTextColor()).sizeDp(10).iconOffsetYDp(1), null, null, null);
+							new IconicsDrawable(target.getContext(), icon).colorRes(R.color.divider).sizeDp(10).iconOffsetYDp(1), null, null, null);
 		}
 
 		private int dpToPx(int dp) {
