@@ -1,6 +1,9 @@
 package com.arcao.trackables.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StrikethroughSpan;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -74,9 +77,13 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 		}
 
 		public void bind(Trackable trackable) {
-			titleTextView.setText(trackable.getName());
+			SpannableString title = new SpannableString(trackable.getName());
 
+			if (trackable.isArchived()) {
+				title.setSpan(new StrikethroughSpan(), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
 
+			titleTextView.setText(title);
 
 			applyIcon(trackableCodeTextView, GoogleMaterial.Icon.gmd_label);
 			trackableCodeTextView.setText(trackable.getTrackingNumber());
