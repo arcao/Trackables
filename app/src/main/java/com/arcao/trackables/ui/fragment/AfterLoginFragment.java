@@ -11,11 +11,12 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.ui.WelcomeActivity;
-import com.arcao.trackables.ui.WelcomeActivityComponent;
+import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.task.AfterLoginTask;
 
-public class AfterLoginFragment extends Fragment implements AfterLoginTask.TaskListener {
+public class AfterLoginFragment extends Fragment implements AfterLoginTask.TaskListener, HasComponent<WelcomeActivityComponent> {
 	private static final String STATE__PROGRESS_STATE = "STATE__PROGRESS_STATE";
 
 	@InjectView(R.id.progressMessage)
@@ -28,16 +29,20 @@ public class AfterLoginFragment extends Fragment implements AfterLoginTask.TaskL
 		return new AfterLoginFragment();
 	}
 
+	public WelcomeActivityComponent component() {
+		return ((WelcomeActivity)getActivity()).component();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true);
 
-		WelcomeActivityComponent component = ((WelcomeActivity)getActivity()).component();
-		component.inject(this);
+		component().inject(this);
 
-		mTask = new AfterLoginTask(component, this);
+		mTask = new AfterLoginTask(this);
+		component().inject(mTask);
 		mTask.execute();
 	}
 

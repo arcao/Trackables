@@ -13,9 +13,10 @@ import butterknife.InjectView;
 import com.arcao.geocaching.api.GeocachingApi;
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
+import com.arcao.trackables.internal.di.component.MainActivityComponent;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.ui.MainActivity;
-import com.arcao.trackables.ui.MainActivityComponent;
 import com.arcao.trackables.ui.adapter.TrackableListAdapter;
 import com.arcao.trackables.ui.widget.recycler_view.SpacesItemDecoration;
 import rx.Observable;
@@ -26,10 +27,7 @@ import rx.schedulers.Schedulers;
 import javax.inject.Inject;
 import java.util.List;
 
-public class TrackableListFragment extends Fragment {
-
-	private MainActivityComponent component;
-
+public class TrackableListFragment extends Fragment implements HasComponent<MainActivityComponent> {
 	@Inject
 	GeocachingApi geocachingApi;
 
@@ -38,14 +36,18 @@ public class TrackableListFragment extends Fragment {
 
 	@InjectView(R.id.recyclerView)
 	protected RecyclerView mRecyclerView;
-	private TrackableListAdapter mAdapter;
+	@Inject
+	protected TrackableListAdapter mAdapter;
+
+	public MainActivityComponent component() {
+		return ((MainActivity)getActivity()).component();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		component = ((MainActivity)getActivity()).component();
-		component.inject(this);
+		component().inject(this);
 	}
 
 	@Nullable
@@ -57,9 +59,7 @@ public class TrackableListFragment extends Fragment {
 		mRecyclerView.setHasFixedSize(true);
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-		mRecyclerView.addItemDecoration(new SpacesItemDecoration((int)getResources().getDimension(R.dimen.trackable_list_item_space)));
-
-		mAdapter = new TrackableListAdapter(component);
+		mRecyclerView.addItemDecoration(new SpacesItemDecoration((int) getResources().getDimension(R.dimen.trackable_list_item_space)));
 		mRecyclerView.setAdapter(mAdapter);
 
 		return view;

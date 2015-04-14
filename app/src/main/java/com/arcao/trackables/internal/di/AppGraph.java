@@ -1,4 +1,4 @@
-package com.arcao.trackables;
+package com.arcao.trackables.internal.di;
 
 import com.arcao.geocaching.api.GeocachingApi;
 import com.arcao.geocaching.api.data.DeviceInfo;

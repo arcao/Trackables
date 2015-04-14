@@ -1,4 +1,4 @@
-package com.arcao.trackables.util.di.scope;
+package com.arcao.trackables.internal.di;
 
 import javax.inject.Scope;
 import java.lang.annotation.Retention;

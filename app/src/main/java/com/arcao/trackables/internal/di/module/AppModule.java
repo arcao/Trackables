@@ -1,5 +1,6 @@
-package com.arcao.trackables;
+package com.arcao.trackables.internal.di.module;
 
+import com.arcao.trackables.App;
 import dagger.Module;
 import dagger.Provides;
 

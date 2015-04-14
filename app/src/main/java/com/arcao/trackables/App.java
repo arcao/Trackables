@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
+import com.arcao.trackables.internal.di.component.AppComponent;
 import com.arcao.trackables.preference.PreferenceHelper;
 import com.arcao.trackables.ui.util.picasso.CropSquareTransformation;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;

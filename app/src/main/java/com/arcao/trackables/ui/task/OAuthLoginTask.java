@@ -7,7 +7,6 @@ import com.arcao.geocaching.api.data.DeviceInfo;
 import com.arcao.geocaching.api.data.UserProfile;
 import com.arcao.trackables.exception.ExceptionHandler;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
-import com.arcao.trackables.ui.WelcomeActivityComponent;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
@@ -37,8 +36,7 @@ public class OAuthLoginTask extends AsyncTask<String, Void, String[]> {
 	private final WeakReference<TaskListener> mTaskListenerRef;
 	private Throwable throwable = null;
 
-	public OAuthLoginTask(WelcomeActivityComponent component, TaskListener listener) {
-		component.inject(this);
+	public OAuthLoginTask(TaskListener listener) {
 		mTaskListenerRef = new WeakReference<>(listener);
 	}
 

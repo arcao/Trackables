@@ -16,20 +16,20 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import com.arcao.trackables.AppConstants;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.ui.ErrorActivity;
 import com.arcao.trackables.ui.WelcomeActivity;
-import com.arcao.trackables.ui.WelcomeActivityComponent;
+import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.task.OAuthLoginTask;
 import timber.log.Timber;
 
 import java.util.Locale;
 
-public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskListener {
+public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskListener, HasComponent<WelcomeActivityComponent> {
 	public static final String FRAGMENT_TAG = OAuthLoginFragment.class.getName();
 	private static final String STATE_PROGRESS_VISIBLE = "STATE_PROGRESS_VISIBLE";
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 
-	private WelcomeActivityComponent component;
 	private OAuthLoginTask mTask;
 	private WebView mWebView = null;
 	private View mProgressHolder = null;
@@ -37,6 +37,10 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 
 	public static OAuthLoginFragment newInstance() {
 		return new OAuthLoginFragment();
+	}
+
+	public WelcomeActivityComponent component() {
+		return ((WelcomeActivity)getActivity()).component();
 	}
 
 	@Override
@@ -48,10 +52,10 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 		// clear geocaching.com cookies
 		//App.get(getActivity()).clearGeocachingCookies();
 
-		component = ((WelcomeActivity)getActivity()).component();
-		component.inject(this);
+		component().inject(this);
 
-		mTask = new OAuthLoginTask(component, this);
+		mTask = new OAuthLoginTask(this);
+		component().inject(mTask);
 		mTask.execute();
 	}
 
@@ -149,7 +153,8 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 					mProgressHolder.setVisibility(View.VISIBLE);
 				}
 
-				mTask = new OAuthLoginTask(component, OAuthLoginFragment.this);
+				mTask = new OAuthLoginTask(OAuthLoginFragment.this);
+				component().inject(mTask);
 				mTask.execute(uri.getQueryParameter(OAUTH_VERIFIER));
 
 				return true;

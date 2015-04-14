@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.arcao.geocaching.api.GeocachingApi;
 import com.arcao.trackables.exception.ExceptionHandler;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
-import com.arcao.trackables.ui.WelcomeActivityComponent;
 import timber.log.Timber;
 
 import javax.inject.Inject;
@@ -32,8 +31,7 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 	private final WeakReference<TaskListener> mTaskListenerRef;
 	private Throwable throwable = null;
 
-	public AfterLoginTask(WelcomeActivityComponent component, TaskListener listener) {
-		component.inject(this);
+	public AfterLoginTask(TaskListener listener) {
 		mTaskListenerRef = new WeakReference<>(listener);
 	}
 

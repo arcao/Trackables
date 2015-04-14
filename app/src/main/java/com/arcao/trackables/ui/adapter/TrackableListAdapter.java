@@ -4,14 +4,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.trackables.R;
-import com.arcao.trackables.ui.MainActivityComponent;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
@@ -26,11 +27,11 @@ import java.util.List;
 public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdapter.ViewHolder> {
 	private final List<Trackable> trackables = new ArrayList<>();
 
-	private MainActivityComponent component;
+	protected final Picasso picasso;
 
-	public TrackableListAdapter(MainActivityComponent component) {
-		this.component = component;
-		component.inject(this);
+	@Inject
+	public TrackableListAdapter(Picasso picasso) {
+		this.picasso = picasso;
 	}
 
 	public void setTrackables(List<Trackable> trackables) {
@@ -67,13 +68,9 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 		@InjectView(R.id.positionText)
 		protected TextView positionTextView;
 
-		@Inject
-		protected Picasso picasso;
-
 		public ViewHolder(View view) {
 			super(view);
 			ButterKnife.inject(this, view);
-			component.inject(this);
 		}
 
 		public void bind(Trackable trackable) {

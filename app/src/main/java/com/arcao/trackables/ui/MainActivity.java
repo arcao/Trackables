@@ -9,6 +9,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.arcao.geocaching.api.data.type.MemberType;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
+import com.arcao.trackables.internal.di.component.MainActivityComponent;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.preference.PreferenceHelper;
 import com.arcao.trackables.ui.fragment.TrackableListFragment;
@@ -22,7 +24,7 @@ import timber.log.Timber;
 
 import javax.inject.Inject;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements HasComponent<MainActivityComponent> {
 	@Inject
 	AccountPreferenceHelper accountPreferenceHelper;
 

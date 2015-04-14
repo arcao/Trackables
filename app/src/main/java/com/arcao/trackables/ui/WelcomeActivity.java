@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
+import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
 import com.arcao.trackables.ui.fragment.WelcomeFragment;
 import timber.log.Timber;
 
-public class WelcomeActivity extends ActionBarActivity {
+public class WelcomeActivity extends ActionBarActivity implements HasComponent<WelcomeActivityComponent> {
 	public enum WelcomeState {
 		WELCOME,
 		LOGIN,

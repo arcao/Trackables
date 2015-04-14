@@ -9,20 +9,24 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.arcao.trackables.R;
+import com.arcao.trackables.internal.di.HasComponent;
+import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.WelcomeActivity;
-import com.arcao.trackables.ui.WelcomeActivityComponent;
 
-public class WelcomeFragment extends Fragment {
+public class WelcomeFragment extends Fragment implements HasComponent<WelcomeActivityComponent> {
 	public static WelcomeFragment newInstance() {
 		return new WelcomeFragment();
 	}
 
 	@Override
+	public WelcomeActivityComponent component() {
+		return ((WelcomeActivity)getActivity()).component();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		WelcomeActivityComponent component = ((WelcomeActivity)getActivity()).component();
-		component.inject(this);
+		component().inject(this);
 	}
 
 	@Nullable

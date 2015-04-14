@@ -14,6 +14,8 @@ import dagger.Provides;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.oauth.OAuthService;
 
+import javax.inject.Singleton;
+
 @Module
 public final class GeocachingModule {
 	@Provides
@@ -25,6 +27,7 @@ public final class GeocachingModule {
 		}
 	}
 
+	@Singleton
 	@Provides
 	public OAuthService provideOAuthService() {
 		ServiceBuilder serviceBuilder = new ServiceBuilder()
@@ -42,6 +45,7 @@ public final class GeocachingModule {
 		return serviceBuilder.build();
 	}
 
+	@Singleton
 	@Provides
 	public DeviceInfo provideDeviceInfo(App app) {
 		return new DeviceInfo(

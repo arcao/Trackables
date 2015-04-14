@@ -8,7 +8,9 @@ import org.scribe.model.Token;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
+@Singleton
 public class AccountPreferenceHelper {
 	private static final String USER_NAME = "USER_NAME";
 	private static final String ACCESS_TOKEN = "ACCESS_TOKEN";

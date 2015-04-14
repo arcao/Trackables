@@ -1,11 +1,11 @@
-package com.arcao.trackables.ui;
+package com.arcao.trackables.internal.di.component;
 
 import android.content.Context;
 import com.arcao.trackables.App;
-import com.arcao.trackables.AppComponent;
+import com.arcao.trackables.internal.di.ActivityScope;
+import com.arcao.trackables.ui.MainActivity;
 import com.arcao.trackables.ui.adapter.TrackableListAdapter;
 import com.arcao.trackables.ui.fragment.TrackableListFragment;
-import com.arcao.trackables.util.di.scope.ActivityScope;
 import dagger.Component;
 
 @ActivityScope

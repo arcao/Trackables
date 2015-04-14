@@ -1,14 +1,14 @@
-package com.arcao.trackables.ui;
+package com.arcao.trackables.internal.di.component;
 
 import android.content.Context;
 import com.arcao.trackables.App;
-import com.arcao.trackables.AppComponent;
+import com.arcao.trackables.internal.di.ActivityScope;
+import com.arcao.trackables.ui.WelcomeActivity;
 import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
 import com.arcao.trackables.ui.fragment.WelcomeFragment;
 import com.arcao.trackables.ui.task.AfterLoginTask;
 import com.arcao.trackables.ui.task.OAuthLoginTask;
-import com.arcao.trackables.util.di.scope.ActivityScope;
 import dagger.Component;
 
 @ActivityScope
