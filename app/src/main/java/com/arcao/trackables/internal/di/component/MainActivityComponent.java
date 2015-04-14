@@ -1,15 +1,16 @@
 package com.arcao.trackables.internal.di.component;
 
-import android.content.Context;
+import android.app.Activity;
 import com.arcao.trackables.App;
-import com.arcao.trackables.internal.di.ActivityScope;
+import com.arcao.trackables.internal.di.PerActivity;
+import com.arcao.trackables.internal.di.module.ActivityModule;
 import com.arcao.trackables.ui.MainActivity;
 import com.arcao.trackables.ui.adapter.TrackableListAdapter;
 import com.arcao.trackables.ui.fragment.TrackableListFragment;
 import dagger.Component;
 
-@ActivityScope
-@Component(dependencies = AppComponent.class)
+@PerActivity
+@Component(dependencies = AppComponent.class, modules = ActivityModule.class)
 public interface MainActivityComponent {
 	// activity
 	void inject(MainActivity activity);
@@ -23,9 +24,10 @@ public interface MainActivityComponent {
 
 
 	final class Initializer {
-		public static MainActivityComponent init(Context context) {
+		public static MainActivityComponent init(Activity activity) {
 			return DaggerMainActivityComponent.builder()
-							.appComponent(App.get(context).component())
+							.activityModule(new ActivityModule(activity))
+							.appComponent(App.get(activity).component())
 							.build();
 		}
 		private Initializer() {} // No instances.

@@ -1,8 +1,9 @@
 package com.arcao.trackables.internal.di.component;
 
-import android.content.Context;
+import android.app.Activity;
 import com.arcao.trackables.App;
-import com.arcao.trackables.internal.di.ActivityScope;
+import com.arcao.trackables.internal.di.PerActivity;
+import com.arcao.trackables.internal.di.module.ActivityModule;
 import com.arcao.trackables.ui.WelcomeActivity;
 import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
@@ -11,8 +12,8 @@ import com.arcao.trackables.ui.task.AfterLoginTask;
 import com.arcao.trackables.ui.task.OAuthLoginTask;
 import dagger.Component;
 
-@ActivityScope
-@Component(dependencies = AppComponent.class)
+@PerActivity
+@Component(dependencies = AppComponent.class, modules = ActivityModule.class)
 public interface WelcomeActivityComponent {
 	// activity
 	void inject(WelcomeActivity activity);
@@ -27,9 +28,10 @@ public interface WelcomeActivityComponent {
 	void inject(OAuthLoginTask task);
 
 	final class Initializer {
-		public static WelcomeActivityComponent init(Context context) {
+		public static WelcomeActivityComponent init(Activity activity) {
 			return DaggerWelcomeActivityComponent.builder()
-							.appComponent(App.get(context).component())
+							.activityModule(new ActivityModule(activity))
+							.appComponent(App.get(activity).component())
 							.build();
 		}
 		private Initializer() {} // No instances.

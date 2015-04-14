@@ -1,5 +1,6 @@
 package com.arcao.trackables.ui.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -28,10 +29,12 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 	private final List<Trackable> trackables = new ArrayList<>();
 
 	protected final Picasso picasso;
+	protected final Activity activity;
 
 	@Inject
-	public TrackableListAdapter(Picasso picasso) {
+	public TrackableListAdapter(Picasso picasso, Activity activity) {
 		this.picasso = picasso;
+		this.activity = activity;
 	}
 
 	public void setTrackables(List<Trackable> trackables) {
