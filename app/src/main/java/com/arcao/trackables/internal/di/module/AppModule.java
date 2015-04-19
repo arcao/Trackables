@@ -1,6 +1,9 @@
 package com.arcao.trackables.internal.di.module;
 
+import android.content.Context;
+
 import com.arcao.trackables.App;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -14,6 +17,11 @@ public final class AppModule {
 
 	@Provides
 	App provideApp() {
+		return app;
+	}
+
+	@Provides
+	Context provideApplicationContext() {
 		return app;
 	}
 }
