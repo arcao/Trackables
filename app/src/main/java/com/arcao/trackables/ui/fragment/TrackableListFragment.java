@@ -8,28 +8,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import com.arcao.geocaching.api.GeocachingApi;
-import com.arcao.geocaching.api.data.Trackable;
+
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.MainActivityComponent;
+import com.arcao.trackables.internal.rx.AndroidSchedulerTransformer;
 import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.ui.MainActivity;
 import com.arcao.trackables.ui.adapter.TrackableListAdapter;
 import com.arcao.trackables.ui.widget.recycler_view.SpacesItemDecoration;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class TrackableListFragment extends Fragment implements HasComponent<MainActivityComponent> {
 	@Inject
-	GeocachingApi geocachingApi;
+	TrackableService trackableService;
 
 	@Inject
 	AccountPreferenceHelper accountPreferenceHelper;
@@ -70,16 +67,8 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 		super.onResume();
 
 
-		Observable.create(new Observable.OnSubscribe<List<Trackable>>() {
-			@Override
-			public void call(Subscriber<? super List<Trackable>> subscriber) {
-				try {
-					geocachingApi.openSession(accountPreferenceHelper.getAccessToken());
-					subscriber.onNext(geocachingApi.getUsersTrackables(0, 30, 0, false));
-				} catch (Exception e) {
-					subscriber.onError(e);
-				}
-			}
-		}).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(mAdapter::setTrackables);
+		trackableService.getUserTrackables()
+						.compose(AndroidSchedulerTransformer.get())
+						.subscribe(mAdapter::setTrackables);
 	}
 }
