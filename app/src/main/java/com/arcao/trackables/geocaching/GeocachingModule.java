@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 
 @Module
 public final class GeocachingModule {
+	@Singleton
 	@Provides
 	public GeocachingApi provideGeocachingApi() {
 		if (BuildConfig.GEOCACHING_API_STAGING) {
