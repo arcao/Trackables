@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-
 import com.arcao.trackables.AppConstants;
 import com.arcao.trackables.R;
 import com.arcao.trackables.data.service.AccountService;
@@ -24,15 +23,13 @@ import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.internal.rx.AndroidSchedulerTransformer;
 import com.arcao.trackables.ui.ErrorActivity;
 import com.arcao.trackables.ui.WelcomeActivity;
-
-import java.util.Locale;
-
-import javax.inject.Inject;
-
 import rx.functions.Actions;
 import rx.internal.util.SubscriptionList;
 import rx.observers.Subscribers;
 import timber.log.Timber;
+
+import javax.inject.Inject;
+import java.util.Locale;
 
 public class OAuthLoginFragment extends Fragment implements HasComponent<WelcomeActivityComponent> {
 	public static final String FRAGMENT_TAG = OAuthLoginFragment.class.getName();
@@ -97,7 +94,7 @@ public class OAuthLoginFragment extends Fragment implements HasComponent<Welcome
 			return;
 
 		if (errorIntent == null) {
-			activity.switchTo(WelcomeActivity.WelcomeState.FINISHED);
+			activity.switchTo(WelcomeActivity.WelcomeState.AFTER_LOGIN);
 		}
 		else {
 			activity.showError(errorIntent);

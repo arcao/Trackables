@@ -87,6 +87,13 @@ public class AfterLoginFragment extends Fragment implements AfterLoginTask.TaskL
 			default:
 			case RETRIEVE_TRACKABLES:
 				resMessage = R.string.login_progress_retrieve_trackables;
+				break;
+			case RETRIEVE_TRACKABLE_TRAVELS:
+				resMessage = R.string.login_progress_retrieve_trackable_travels;
+				break;
+			case RETRIEVE_GEOCACHES:
+				resMessage = R.string.login_progress_retrieve_geocaches;
+				break;
 		}
 
 		mProgressMessage.setText(resMessage);
