@@ -1,14 +1,15 @@
 package com.arcao.trackables.data.persistence;
 
 import android.content.Context;
+import au.com.gridstone.grex.converter.Converter;
+import au.com.gridstone.grex.converters.JacksonConverter;
+import com.arcao.trackables.data.persistence.jackson.mixin.MixinModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dagger.Module;
+import dagger.Provides;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-
-import au.com.gridstone.grex.converter.Converter;
-import au.com.gridstone.grex.converters.JacksonConverter;
-import dagger.Module;
-import dagger.Provides;
 
 @Module
 public class PersistenceModule {
@@ -48,7 +49,10 @@ public class PersistenceModule {
 	@Provides
 	@Singleton
 	Converter provideConverter() {
-		return new JacksonConverter();
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new MixinModule());
+
+		return new JacksonConverter(objectMapper);
 	}
 
 }
