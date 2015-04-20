@@ -5,4 +5,5 @@ package com.arcao.trackables;
  */
 public interface AppConstants {
 	String OAUTH_CALLBACK_URL = "x-callback://com.arcao.trackables/";
+	long OKHTTP_DISK_CACHE_SIZE = 104857600; // 100MB
 }
