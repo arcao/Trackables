@@ -5,34 +5,36 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.arcao.geocaching.api.data.type.MemberType;
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.AccountService;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.MainActivityComponent;
-import com.arcao.trackables.preference.AccountPreferenceHelper;
-import com.arcao.trackables.preference.PreferenceHelper;
 import com.arcao.trackables.ui.fragment.TrackableListFragment;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
-import com.mikepenz.materialdrawer.model.*;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
-import timber.log.Timber;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import timber.log.Timber;
+
 public class MainActivity extends ActionBarActivity implements HasComponent<MainActivityComponent> {
 	@Inject
-	AccountPreferenceHelper accountPreferenceHelper;
-
-	@Inject
-	PreferenceHelper preferenceHelper;
+	protected AccountService accountService;
 
 	@InjectView(R.id.toolbar)
-	Toolbar toolbar;
+	protected Toolbar toolbar;
 
 	private AccountHeader.Result headerResult = null;
 	private Drawer.Result result = null;
@@ -102,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements HasComponent<Main
 		//react on the keyboard
 		//result.keyboardSupportEnabled(this, true);
 
-		if (!accountPreferenceHelper.isAccount()) {
+		if (!accountService.isAccount()) {
 			startActivity(new Intent(this, WelcomeActivity.class));
 			return;
 		}
@@ -119,12 +121,12 @@ public class MainActivity extends ActionBarActivity implements HasComponent<Main
 	}
 
 	private ProfileDrawerItem createProfile() {
-		if (accountPreferenceHelper.isAccount()) {
-			Timber.d(accountPreferenceHelper.getAvatarUrl());
+		if (accountService.isAccount()) {
+			Timber.d(accountService.getAvatarUrl());
 			return new ProfileDrawerItem()
-							.withName(accountPreferenceHelper.getUserName())
-							.withEmail(accountPreferenceHelper.getMemberType() == MemberType.Premium ? getString(R.string.member_premium) : getString(R.string.member_basic))
-							.withIcon(accountPreferenceHelper.getAvatarUrl());
+							.withName(accountService.getUserName())
+							.withEmail(accountService.getMemberType() == MemberType.Premium ? getString(R.string.member_premium) : getString(R.string.member_basic))
+							.withIcon(accountService.getAvatarUrl());
 		} else {
 			return new ProfileDrawerItem();
 		}

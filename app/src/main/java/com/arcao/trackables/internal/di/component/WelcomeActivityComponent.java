@@ -9,7 +9,6 @@ import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
 import com.arcao.trackables.ui.fragment.WelcomeFragment;
 import com.arcao.trackables.ui.task.AfterLoginTask;
-import com.arcao.trackables.ui.task.OAuthLoginTask;
 import dagger.Component;
 
 @PerActivity
@@ -25,7 +24,6 @@ public interface WelcomeActivityComponent {
 
 	// tasks
 	void inject(AfterLoginTask task);
-	void inject(OAuthLoginTask task);
 
 	final class Initializer {
 		public static WelcomeActivityComponent init(Activity activity) {

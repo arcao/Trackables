@@ -14,26 +14,43 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+
 import com.arcao.trackables.AppConstants;
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.AccountService;
+import com.arcao.trackables.exception.ExceptionHandler;
 import com.arcao.trackables.internal.di.HasComponent;
+import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
+import com.arcao.trackables.internal.rx.AndroidSchedulerTransformer;
 import com.arcao.trackables.ui.ErrorActivity;
 import com.arcao.trackables.ui.WelcomeActivity;
-import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
-import com.arcao.trackables.ui.task.OAuthLoginTask;
-import timber.log.Timber;
 
 import java.util.Locale;
 
-public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskListener, HasComponent<WelcomeActivityComponent> {
+import javax.inject.Inject;
+
+import rx.functions.Actions;
+import rx.internal.util.SubscriptionList;
+import rx.observers.Subscribers;
+import timber.log.Timber;
+
+public class OAuthLoginFragment extends Fragment implements HasComponent<WelcomeActivityComponent> {
 	public static final String FRAGMENT_TAG = OAuthLoginFragment.class.getName();
+
 	private static final String STATE_PROGRESS_VISIBLE = "STATE_PROGRESS_VISIBLE";
+
 	private static final String OAUTH_VERIFIER = "oauth_verifier";
 
-	private OAuthLoginTask mTask;
 	private WebView mWebView = null;
 	private View mProgressHolder = null;
 	private Bundle mLastInstanceState;
+	private final SubscriptionList subscriptionList = new SubscriptionList();
+
+	@Inject
+	protected AccountService accountService;
+
+	@Inject
+	protected ExceptionHandler exceptionHandler;
 
 	public static OAuthLoginFragment newInstance() {
 		return new OAuthLoginFragment();
@@ -54,28 +71,27 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 
 		component().inject(this);
 
-		mTask = new OAuthLoginTask(this);
-		component().inject(mTask);
-		mTask.execute();
+		subscriptionList.add(
+						accountService.startOAuthLogin()
+										.compose(AndroidSchedulerTransformer.get())
+										.subscribe(this::onLoginUrlAvailable)
+		);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (mTask != null)
-			mTask.cancel(true);
+		subscriptionList.unsubscribe();
 	}
 
-	@Override
 	public void onLoginUrlAvailable(String url) {
 		if (mWebView != null) {
 			mWebView.loadUrl(url);
 		}
 	}
 
-	@Override
-	public void onTaskFinished(Intent errorIntent) {
+	public void onLoginFinished(Intent errorIntent) {
 		WelcomeActivity activity = (WelcomeActivity) getActivity();
 		if (activity == null)
 			return;
@@ -153,9 +169,14 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 					mProgressHolder.setVisibility(View.VISIBLE);
 				}
 
-				mTask = new OAuthLoginTask(OAuthLoginFragment.this);
-				component().inject(mTask);
-				mTask.execute(uri.getQueryParameter(OAUTH_VERIFIER));
+				subscriptionList.add(
+								accountService.finishOAuthLogin(uri.getQueryParameter(OAUTH_VERIFIER))
+												.compose(AndroidSchedulerTransformer.get()).
+												subscribe(Subscribers.create(
+																Actions.empty(),
+																throwable -> onLoginFinished(exceptionHandler.handle(throwable)),
+																() -> onLoginFinished(null)))
+				);
 
 				return true;
 			}
@@ -189,7 +210,7 @@ public class OAuthLoginFragment extends Fragment implements OAuthLoginTask.TaskL
 			super.onReceivedError(view, errorCode, description, failingUrl);
 
 			if (getActivity() != null)
-				onTaskFinished(new ErrorActivity.IntentBuilder(getActivity()).withAdditionalMessage(description).build());
+				onLoginFinished(new ErrorActivity.IntentBuilder(getActivity()).withAdditionalMessage(description).build());
 		}
 
 		@Override

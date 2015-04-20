@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.AccountService;
 import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.MainActivityComponent;
 import com.arcao.trackables.internal.rx.AndroidSchedulerTransformer;
-import com.arcao.trackables.preference.AccountPreferenceHelper;
 import com.arcao.trackables.ui.MainActivity;
 import com.arcao.trackables.ui.adapter.TrackableListAdapter;
 import com.arcao.trackables.ui.widget.recycler_view.SpacesItemDecoration;
@@ -26,10 +26,10 @@ import butterknife.InjectView;
 
 public class TrackableListFragment extends Fragment implements HasComponent<MainActivityComponent> {
 	@Inject
-	TrackableService trackableService;
+	protected AccountService accountService;
 
 	@Inject
-	AccountPreferenceHelper accountPreferenceHelper;
+	protected TrackableService trackableService;
 
 	@InjectView(R.id.recyclerView)
 	protected RecyclerView mRecyclerView;
@@ -66,9 +66,10 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 	public void onResume() {
 		super.onResume();
 
-
-		trackableService.getUserTrackables()
-						.compose(AndroidSchedulerTransformer.get())
-						.subscribe(mAdapter::setTrackables);
+		if (accountService.isAccount()) {
+			trackableService.getUserTrackables()
+							.compose(AndroidSchedulerTransformer.get())
+							.subscribe(mAdapter::setTrackables);
+		}
 	}
 }
