@@ -44,7 +44,7 @@ public class GeocacheApiService {
 
 	private static class GeocacheRetrieveThread extends Thread {
 		private static final int GEOCACHE_PER_REQUEST = 10;
-		private static final int SINGLE_ITEM_WAIT_MILLIS = 250;
+		private static final int SINGLE_ITEM_WAIT_MILLIS = 10;
 
 		private final GeocachingApi geocachingApi;
 		private final GeocachingApi.ResultQuality resultQuality;
