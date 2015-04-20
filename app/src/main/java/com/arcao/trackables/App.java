@@ -21,6 +21,9 @@ public class App extends Application {
 	@Inject
 	PreferenceHelper preferenceHelper;
 
+	@Inject
+	Picasso picasso;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -39,12 +42,12 @@ public class App extends Application {
 		DrawerImageLoader.init(new DrawerImageLoader.IDrawerImageLoader() {
 			@Override
 			public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-				Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).transform(new CropSquareTransformation()).into(imageView);
+				picasso.load(uri).placeholder(placeholder).transform(new CropSquareTransformation()).into(imageView);
 			}
 
 			@Override
 			public void cancel(ImageView imageView) {
-				Picasso.with(imageView.getContext()).cancelRequest(imageView);
+				picasso.cancelRequest(imageView);
 			}
 		});
 	}
