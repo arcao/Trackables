@@ -7,6 +7,7 @@ import com.arcao.geocaching.api.exception.InvalidResponseException;
 import com.arcao.geocaching.api.exception.NetworkException;
 import com.arcao.geocaching.api.impl.live_geocaching_api.exception.LiveGeocachingApiException;
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.AccountService;
 import com.arcao.trackables.ui.ErrorActivity;
 import com.arcao.trackables.ui.WelcomeActivity;
 import org.scribe.exceptions.OAuthConnectionException;
@@ -14,9 +15,11 @@ import timber.log.Timber;
 
 public class ExceptionHandler {
 	protected final Context mContext;
+	protected final AccountService accountService;
 
-	public ExceptionHandler(Context ctx) {
+	public ExceptionHandler(Context ctx, AccountService accountService) {
 		mContext = ctx;
+		this.accountService = accountService;
 	}
 
 	public Intent handle(Throwable t) {
@@ -50,6 +53,9 @@ public class ExceptionHandler {
 
 	protected Intent handleLiveGeocachingApiExceptions(LiveGeocachingApiException t) {
 		switch (t.getStatusCode()) {
+			case NotAuthorized:
+				accountService.logout();
+				return null;
 			case CacheLimitExceeded: // 118: user reach the quota limit
 			case NumberOfCallsExceeded: // 140: too many method calls per minute
 
