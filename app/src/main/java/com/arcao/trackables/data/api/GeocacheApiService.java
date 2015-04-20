@@ -4,18 +4,18 @@ import com.arcao.geocaching.api.GeocachingApi;
 import com.arcao.geocaching.api.data.Geocache;
 import com.arcao.geocaching.api.impl.live_geocaching_api.filter.CacheCodeFilter;
 import com.arcao.trackables.internal.rx.OnSubscribePublisher;
+import rx.Observable;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import rx.Observable;
 
 @Singleton
 public class GeocacheApiService {
@@ -28,17 +28,23 @@ public class GeocacheApiService {
 	}
 
 	public Observable<Geocache> getGeocache(String geocacheCode) {
-		if (thread == null) {
-			thread = new GeocacheRetrieveThread(geocachingApi, GeocachingApi.ResultQuality.LITE);
-			thread.start();
+		Timber.d("Retrieve: %s", geocacheCode);
+
+		synchronized (this) {
+			if (thread == null) {
+				thread = new GeocacheRetrieveThread(geocachingApi, GeocachingApi.ResultQuality.LITE);
+				thread.start();
+			}
 		}
 
-		return Observable.create(thread.retrieve(geocacheCode));
+		Observable.OnSubscribe<Geocache> request = thread.retrieve(geocacheCode);
+
+		return Observable.defer(() -> Observable.create(request)).subscribeOn(Schedulers.computation());
 	}
 
 	private static class GeocacheRetrieveThread extends Thread {
 		private static final int GEOCACHE_PER_REQUEST = 10;
-		private static final int SINGLE_ITEM_WAIT_MILLIS = 25;
+		private static final int SINGLE_ITEM_WAIT_MILLIS = 250;
 
 		private final GeocachingApi geocachingApi;
 		private final GeocachingApi.ResultQuality resultQuality;
@@ -50,11 +56,9 @@ public class GeocacheApiService {
 			requestQueue = new LinkedBlockingQueue<>();
 		}
 
-		public synchronized Observable.OnSubscribe<Geocache> retrieve(String geocacheCode) {
+		public Observable.OnSubscribe<Geocache> retrieve(String geocacheCode) {
 			GeocacheRequest request = new GeocacheRequest(geocacheCode);
-
 			requestQueue.add(request);
-
 			return request;
 		}
 
@@ -67,7 +71,9 @@ public class GeocacheApiService {
 					requests.add(requestQueue.take());
 
 					if (requestQueue.isEmpty()) {
-						wait(SINGLE_ITEM_WAIT_MILLIS);
+						synchronized (this) {
+							wait(SINGLE_ITEM_WAIT_MILLIS);
+						}
 					}
 
 					while (!requestQueue.isEmpty() && requests.size() < GEOCACHE_PER_REQUEST) {

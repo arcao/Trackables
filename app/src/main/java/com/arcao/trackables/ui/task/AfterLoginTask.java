@@ -2,23 +2,20 @@ package com.arcao.trackables.ui.task;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.geocaching.api.data.TrackableTravel;
 import com.arcao.geocaching.api.util.GeocachingUtils;
 import com.arcao.trackables.data.service.GeocacheService;
 import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.exception.ExceptionHandler;
+import rx.Observable;
+import timber.log.Timber;
 
+import javax.inject.Inject;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.inject.Inject;
-
-import rx.Observable;
-import timber.log.Timber;
 
 public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.ProgressState, Void> {
 	public  interface TaskListener {
@@ -68,7 +65,7 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 			}
 
 			publishProgress(TaskListener.ProgressState.RETRIEVE_GEOCACHES);
-			Observable.from(geocaches).flatMap(geocacheService::getGeocache).toBlocking();
+			Observable.from(geocaches).flatMap(geocacheService::getGeocache).toList().toBlocking().single();
 		} catch (Throwable e) {
 			throwable = e;
 
