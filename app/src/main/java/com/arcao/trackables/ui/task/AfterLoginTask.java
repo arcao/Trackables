@@ -2,14 +2,23 @@ package com.arcao.trackables.ui.task;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import com.arcao.geocaching.api.GeocachingApi;
+
+import com.arcao.geocaching.api.data.Trackable;
+import com.arcao.geocaching.api.data.TrackableTravel;
+import com.arcao.geocaching.api.util.GeocachingUtils;
+import com.arcao.trackables.data.service.GeocacheService;
+import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.exception.ExceptionHandler;
-import com.arcao.trackables.preference.AccountPreferenceHelper;
-import timber.log.Timber;
+
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import java.lang.ref.WeakReference;
+
+import rx.Observable;
+import timber.log.Timber;
 
 public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.ProgressState, Void> {
 	public  interface TaskListener {
@@ -17,16 +26,20 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 		void onTaskFinished(Intent intent);
 
 		enum ProgressState {
-			RETRIEVE_TRACKABLES
+			RETRIEVE_TRACKABLES,
+			RETRIEVE_TRACKABLE_TRAVELS,
+			RETRIEVE_GEOCACHES
 		}
 	}
 
 	@Inject
-	AccountPreferenceHelper accountPreferenceHelper;
+	protected ExceptionHandler exceptionHandler;
+
 	@Inject
-	Provider<GeocachingApi> geocachingApiProvider;
+	protected TrackableService trackableService;
+
 	@Inject
-	ExceptionHandler exceptionHandler;
+	protected GeocacheService geocacheService;
 
 	private final WeakReference<TaskListener> mTaskListenerRef;
 	private Throwable throwable = null;
@@ -37,6 +50,32 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		try {
+			publishProgress(TaskListener.ProgressState.RETRIEVE_TRACKABLES);
+
+			List<Trackable> trackables = trackableService.getUserTrackables().toBlocking().single();
+
+			publishProgress(TaskListener.ProgressState.RETRIEVE_TRACKABLE_TRAVELS);
+
+			Set<String> geocaches = new HashSet<>();
+			for(Trackable trackable : trackables) {
+				List<TrackableTravel> trackableTravels = trackableService.getTrackableTravel(trackable.getTrackingNumber()).toBlocking().single();
+
+				for(TrackableTravel trackableTravel : trackableTravels) {
+					if (trackableTravel.getCacheID() > 0)
+						geocaches.add(GeocachingUtils.cacheIdToCacheCode(trackableTravel.getCacheID()));
+				}
+			}
+
+			publishProgress(TaskListener.ProgressState.RETRIEVE_GEOCACHES);
+			Observable.from(geocaches).flatMap(geocacheService::getGeocache).toBlocking();
+		} catch (Throwable e) {
+			throwable = e;
+
+			if (throwable instanceof RuntimeException && throwable.getCause() != null)
+				throwable = throwable.getCause();
+		}
+
 		return null;
 	}
 

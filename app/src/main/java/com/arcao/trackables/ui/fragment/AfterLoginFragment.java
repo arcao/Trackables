@@ -8,19 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.arcao.trackables.R;
 import com.arcao.trackables.internal.di.HasComponent;
-import com.arcao.trackables.ui.WelcomeActivity;
 import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
+import com.arcao.trackables.ui.WelcomeActivity;
 import com.arcao.trackables.ui.task.AfterLoginTask;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class AfterLoginFragment extends Fragment implements AfterLoginTask.TaskListener, HasComponent<WelcomeActivityComponent> {
 	private static final String STATE__PROGRESS_STATE = "STATE__PROGRESS_STATE";
 
 	@InjectView(R.id.progressMessage)
-	TextView mProgressMessage;
+	protected TextView mProgressMessage;
 
 	private AfterLoginTask mTask;
 	private ProgressState lastProgressState;
