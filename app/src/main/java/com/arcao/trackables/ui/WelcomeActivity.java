@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import com.arcao.trackables.R;
+import com.arcao.trackables.data.service.AccountService;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
 import com.arcao.trackables.ui.fragment.WelcomeFragment;
+
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class WelcomeActivity extends ActionBarActivity implements HasComponent<WelcomeActivityComponent> {
@@ -19,6 +23,9 @@ public class WelcomeActivity extends ActionBarActivity implements HasComponent<W
 		AFTER_LOGIN,
 		FINISHED
 	}
+
+	@Inject
+	protected AccountService accountService;
 
 	private WelcomeActivityComponent component;
 	public WelcomeActivityComponent component() {
@@ -31,6 +38,8 @@ public class WelcomeActivity extends ActionBarActivity implements HasComponent<W
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		component().inject(this);
+
 		setContentView(R.layout.activity_welcome);
 
 		if (getFragmentManager().findFragmentById(R.id.fragment_container) == null && savedInstanceState == null) {
@@ -39,6 +48,7 @@ public class WelcomeActivity extends ActionBarActivity implements HasComponent<W
 	}
 
 	public void showError(Intent errorIntent) {
+		accountService.logout();
 		switchTo(WelcomeState.WELCOME);
 		startActivity(errorIntent);
 	}
