@@ -61,6 +61,7 @@ public class WelcomeActivity extends ActionBarActivity implements HasComponent<W
 				break;
 
 			case FINISHED:
+				startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 				finish();
 				return;
 		}
