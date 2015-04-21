@@ -35,7 +35,8 @@ public class TrackableService {
 			default:
 			case REMOTE_IF_NECESSARY:
 				return persistenceService.getUserTrackables()
-								.switchIfEmpty(Observable.defer(apiService::getUserTrackables));
+								.switchIfEmpty(Observable.defer(() -> apiService.getUserTrackables()
+												.flatMap(persistenceService::putUserTrackables)));
 		}
 	}
 
@@ -53,7 +54,8 @@ public class TrackableService {
 			default:
 			case REMOTE_IF_NECESSARY:
 				return persistenceService.getTrackable(trackableCode)
-								.switchIfEmpty(Observable.defer(() -> apiService.getTrackable(trackableCode)));
+								.switchIfEmpty(Observable.defer(() -> apiService.getTrackable(trackableCode)
+												.flatMap(trackable -> persistenceService.putTrackable(trackableCode, trackable))));
 		}
 	}
 
@@ -71,7 +73,8 @@ public class TrackableService {
 			default:
 			case REMOTE_IF_NECESSARY:
 				return persistenceService.getTrackableTravelList(trackableCode)
-								.switchIfEmpty(Observable.defer(() -> apiService.getTrackableTravelList(trackableCode)));
+								.switchIfEmpty(Observable.defer(() -> apiService.getTrackableTravelList(trackableCode)
+												.flatMap(trackableTravelList -> persistenceService.putTrackableTravelList(trackableCode, trackableTravelList))));
 		}
 	}
 }

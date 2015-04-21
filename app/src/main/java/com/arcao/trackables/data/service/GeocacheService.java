@@ -37,7 +37,8 @@ public class GeocacheService {
 			default:
 			case REMOTE_IF_NECESSARY:
 				return persistenceService.getGeocache(geocacheCode)
-								.switchIfEmpty(Observable.defer(() -> apiService.getGeocache(geocacheCode)));
+								.switchIfEmpty(Observable.defer(() -> apiService.getGeocache(geocacheCode)
+												.flatMap(geocache -> persistenceService.putGeocache(geocacheCode, geocache))));
 		}
 	}
 }
