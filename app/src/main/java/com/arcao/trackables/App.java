@@ -49,6 +49,11 @@ public class App extends Application {
 			public void cancel(ImageView imageView) {
 				picasso.cancelRequest(imageView);
 			}
+
+			@Override
+			public Drawable placeholder(Context context) {
+				return null;
+			}
 		});
 	}
 
