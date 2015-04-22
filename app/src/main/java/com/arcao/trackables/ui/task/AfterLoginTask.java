@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.geocaching.api.data.TrackableTravel;
 import com.arcao.geocaching.api.util.GeocachingUtils;
+import com.arcao.trackables.data.service.DataSource;
 import com.arcao.trackables.data.service.GeocacheService;
 import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.exception.ExceptionHandler;
@@ -50,13 +51,13 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 		try {
 			publishProgress(TaskListener.ProgressState.RETRIEVE_TRACKABLES);
 
-			List<Trackable> trackables = trackableService.getUserTrackables().toBlocking().single();
+			List<Trackable> trackables = trackableService.getUserTrackables(DataSource.REMOTE).toBlocking().single();
 
 			publishProgress(TaskListener.ProgressState.RETRIEVE_TRACKABLE_TRAVELS);
 
 			Set<String> geocaches = new HashSet<>();
 			for(Trackable trackable : trackables) {
-				List<TrackableTravel> trackableTravels = trackableService.getTrackableTravel(trackable.getTrackingNumber()).toBlocking().single();
+				List<TrackableTravel> trackableTravels = trackableService.getTrackableTravel(trackable.getTrackingNumber(), DataSource.REMOTE).toBlocking().single();
 
 				for(TrackableTravel trackableTravel : trackableTravels) {
 					if (trackableTravel.getCacheID() > 0)
@@ -65,7 +66,7 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 			}
 
 			publishProgress(TaskListener.ProgressState.RETRIEVE_GEOCACHES);
-			Observable.from(geocaches).flatMap(geocacheService::getGeocache).toList().toBlocking().single();
+			Observable.from(geocaches).flatMap(geocache -> geocacheService.getGeocache(geocache, DataSource.REMOTE)).toList().toBlocking().single();
 		} catch (Throwable e) {
 			throwable = e;
 
