@@ -3,7 +3,7 @@ package com.arcao.trackables.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import com.arcao.trackables.R;
 import com.arcao.trackables.data.service.AccountService;
 import com.arcao.trackables.internal.di.HasComponent;
@@ -11,12 +11,11 @@ import com.arcao.trackables.internal.di.component.WelcomeActivityComponent;
 import com.arcao.trackables.ui.fragment.AfterLoginFragment;
 import com.arcao.trackables.ui.fragment.OAuthLoginFragment;
 import com.arcao.trackables.ui.fragment.WelcomeFragment;
+import timber.log.Timber;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
-public class WelcomeActivity extends ActionBarActivity implements HasComponent<WelcomeActivityComponent> {
+public class WelcomeActivity extends AppCompatActivity implements HasComponent<WelcomeActivityComponent> {
 	public enum WelcomeState {
 		WELCOME,
 		LOGIN,

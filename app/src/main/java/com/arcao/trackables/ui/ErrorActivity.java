@@ -1,18 +1,18 @@
 package com.arcao.trackables.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arcao.trackables.R;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.Builder;
 
-public class ErrorActivity extends Activity {
+public class ErrorActivity extends AppCompatActivity {
 	private static final String PARAM_RESOURCE_TITLE = "RESOURCE_TITLE";
 	private static final String PARAM_RESOURCE_TEXT = "RESOURCE_TEXT";
 	private static final String PARAM_ADDITIONAL_MESSAGE = "ADDITIONAL_MESSAGE";
