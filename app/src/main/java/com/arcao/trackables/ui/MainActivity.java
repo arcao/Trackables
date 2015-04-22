@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 						.build();
 
 		//react on the keyboard
-		//result.keyboardSupportEnabled(this, true);
+		result.keyboardSupportEnabled(this, true);
 
 		getFragmentManager().beginTransaction().replace(R.id.fragment_container, new TrackableListFragment()).commit();
 	}
