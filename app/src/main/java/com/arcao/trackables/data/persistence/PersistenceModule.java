@@ -18,38 +18,38 @@ import timber.log.Timber;
 
 @Module
 public class PersistenceModule {
-	public static final String PERSISTANCE_MAIN = "base";
-	public static final String PERSISTANCE_TRACKABLE = "trackable";
-	public static final String PERSISTANCE_TRACKABLE_TRAVEL = "trackableTravel";
-	public static final String PERSISTANCE_GEOCACHE = "geocache";
+	public static final String PERSISTENCE_MAIN = "base";
+	public static final String PERSISTENCE_TRACKABLE = "trackable";
+	public static final String PERSISTENCE_TRACKABLE_TRAVEL = "trackableTravel";
+	public static final String PERSISTENCE_GEOCACHE = "geocache";
 
 	@Provides
 	@Singleton
-	@Named(PersistenceModule.PERSISTANCE_MAIN)
+	@Named(PersistenceModule.PERSISTENCE_MAIN)
 	ClassPersister provideMainPersister(Context context, Converter converter) {
-		File directory = context.getDir(PERSISTANCE_MAIN, Context.MODE_PRIVATE);
+		File directory = context.getDir(PERSISTENCE_MAIN, Context.MODE_PRIVATE);
 		return new ClassPersister(converter, directory);
 	}
 
 	@Provides
 	@Singleton
-	@Named(PersistenceModule.PERSISTANCE_TRACKABLE)
+	@Named(PersistenceModule.PERSISTENCE_TRACKABLE)
 	ClassPersister provideTrackablePersister(Context context, Converter converter) {
-		return new ClassPersister(converter, getCacheDir(context, PERSISTANCE_TRACKABLE));
+		return new ClassPersister(converter, getCacheDir(context, PERSISTENCE_TRACKABLE));
 	}
 
 	@Provides
 	@Singleton
-	@Named(PersistenceModule.PERSISTANCE_TRACKABLE_TRAVEL)
+	@Named(PersistenceModule.PERSISTENCE_TRACKABLE_TRAVEL)
 	ClassPersister provideTrackableTravelPersister(Context context, Converter converter) {
-		return new ClassPersister(converter, getCacheDir(context, PERSISTANCE_TRACKABLE_TRAVEL));
+		return new ClassPersister(converter, getCacheDir(context, PERSISTENCE_TRACKABLE_TRAVEL));
 	}
 
 	@Provides
 	@Singleton
-	@Named(PersistenceModule.PERSISTANCE_GEOCACHE)
+	@Named(PersistenceModule.PERSISTENCE_GEOCACHE)
 	ClassPersister provideGeocachePersister(Context context, Converter converter) {
-		return new ClassPersister(converter, getCacheDir(context, PERSISTANCE_GEOCACHE));
+		return new ClassPersister(converter, getCacheDir(context, PERSISTENCE_GEOCACHE));
 	}
 
 	@Provides

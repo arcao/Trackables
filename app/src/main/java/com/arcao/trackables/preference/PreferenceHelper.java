@@ -3,13 +3,14 @@ package com.arcao.trackables.preference;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 @Singleton
 public class PreferenceHelper {
-	private SharedPreferences mSharedPreferences;
+	private final SharedPreferences mSharedPreferences;
 	private String mDeviceId;
 
 	@Inject

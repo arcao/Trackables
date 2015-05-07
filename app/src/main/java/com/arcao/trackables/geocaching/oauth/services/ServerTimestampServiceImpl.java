@@ -1,11 +1,8 @@
 package com.arcao.trackables.geocaching.oauth.services;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
 import org.scribe.exceptions.OAuthConnectionException;
 import org.scribe.services.TimestampServiceImpl;
-import timber.log.Timber;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
 import java.util.Random;
+
+import timber.log.Timber;
 
 public class ServerTimestampServiceImpl extends TimestampServiceImpl {
 	private final Random rand = new Random();
@@ -40,15 +39,16 @@ public class ServerTimestampServiceImpl extends TimestampServiceImpl {
 			c.setRequestMethod("GET");
 			c.connect();
 			if (c.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				String date = c.getHeaderField("Date");
+				long date = c.getDate();
 				is = c.getInputStream();
 				Timber.i("Response: " + IOUtils.toString(is));
-				if (date != null) {
-					Timber.i("We got time: " + date);
-					return DateUtils.parseDate(date);
+				if (date > 0) {
+					Date time = new Date(date);
+					Timber.i("We got time: " + time);
+					return time;
 				}
 			}
-		} catch (IOException | DateParseException e) {
+		} catch (IOException e) {
 			throw new OAuthConnectionException(e);
 		} finally {
 			IOUtils.closeQuietly(is);

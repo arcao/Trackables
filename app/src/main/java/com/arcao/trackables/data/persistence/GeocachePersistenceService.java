@@ -13,7 +13,7 @@ public class GeocachePersistenceService {
 	private final ClassPersister geocachePersister;
 
 	@Inject
-	public GeocachePersistenceService(@Named(PersistenceModule.PERSISTANCE_GEOCACHE) ClassPersister geocachePersister) {
+	public GeocachePersistenceService(@Named(PersistenceModule.PERSISTENCE_GEOCACHE) ClassPersister geocachePersister) {
 		this.geocachePersister = geocachePersister;
 	}
 
