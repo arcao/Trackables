@@ -17,4 +17,11 @@
     <string name="login_progress_retrieve_geocaches">Retrieving Geocaches…</string>
     <string name="member_premium">Premium member</string>
     <string name="member_basic">Member</string>
+
+    <array name="trackable_detail_tabs">
+        <item>Detail</item>
+        <item>Logs</item>
+        <item>Map</item>
+        <item>Statistics</item>
+    </array>
 </resources>

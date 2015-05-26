@@ -72,6 +72,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:cardview-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
@@ -105,5 +106,5 @@ dependencies {
     }
 
     // from JCenter repository
-    compile 'com.afollestad:material-dialogs:0.6.7.1'
+    compile 'com.afollestad:material-dialogs:0.7.4.1'
 }
