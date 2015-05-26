@@ -26,10 +26,14 @@
     <style name="AppTheme.TranslucentStatus" parent="AppBaseTheme.TranslucentStatus">
     </style>
 
-
     <style name="Widget">
     </style>
 
     <style name="Widget.Toolbar" parent="Base.Widget.Toolbar"/>
+
+    <style name="Widget.PagerSlidingTabStrip" parent="AppTheme">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
 
 </resources>

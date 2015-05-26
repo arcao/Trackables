@@ -12,7 +12,7 @@ import com.arcao.trackables.R;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.DetailActivityComponent;
 import com.arcao.trackables.ui.adapter.DetailPagerAdapter;
-import com.arcao.trackables.ui.widget.tab.SlidingTabLayout;
+import com.astuetz.PagerSlidingTabStrip;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,7 +27,7 @@ public class DetailActivity extends AppCompatActivity implements HasComponent<De
 	protected ViewPager mViewPager;
 
 	@InjectView(R.id.sliding_tabs)
-	protected SlidingTabLayout mSlidingTabLayout;
+	protected PagerSlidingTabStrip mPagerSlidingTabStrip;
 
 	private DetailActivityComponent component;
 	public DetailActivityComponent component() {
@@ -49,7 +49,7 @@ public class DetailActivity extends AppCompatActivity implements HasComponent<De
 		getSupportActionBar().setHomeButtonEnabled(true);
 
 		mViewPager.setAdapter(new DetailPagerAdapter(this, getFragmentManager(), getIntent().getStringExtra(PARAM__TRACKING_NUMBER)));
-		mSlidingTabLayout.setViewPager(mViewPager);
+		mPagerSlidingTabStrip.setViewPager(mViewPager);
 	}
 
 	@Override
