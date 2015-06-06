@@ -47,7 +47,7 @@ public class AccountService {
 		login();
 	}
 
-	public void login() {
+	private void login() {
 		try {
 			if (isAccount())
 				geocachingApi.openSession(getAccessToken());

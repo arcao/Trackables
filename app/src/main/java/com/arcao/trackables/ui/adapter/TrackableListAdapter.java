@@ -10,20 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.trackables.R;
+import com.arcao.trackables.ui.DetailActivity;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.squareup.picasso.Picasso;
-import org.apache.commons.lang3.StringUtils;
-import timber.log.Timber;
 
-import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import timber.log.Timber;
 
 public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdapter.ViewHolder> {
 	private final List<Trackable> trackables = new ArrayList<>();
@@ -108,6 +113,10 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 				applyIcon(positionTextView, GoogleMaterial.Icon.gmd_person);
 				positionTextView.setText(trackable.getCurrentOwner().getUserName());
 			}
+
+			itemView.setOnClickListener(v -> {
+				activity.startActivity(DetailActivity.createIntent(activity, trackable.getTrackingNumber()));
+			});
 		}
 
 		private void applyIcon(TextView target, IIcon icon) {

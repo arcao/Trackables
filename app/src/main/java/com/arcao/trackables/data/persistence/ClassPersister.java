@@ -1,7 +1,5 @@
 package com.arcao.trackables.data.persistence;
 
-import android.content.Context;
-
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -14,38 +12,38 @@ import rx.Observable;
 import timber.log.Timber;
 
 public class ClassPersister extends GRexPersister {
-	private final File path;
+	private final File directory;
 
 	/**
-	 * Create a new instances using a provided converter.
+	 * Create a new instance using a provided {@link Converter}.
 	 *
-	 * @param context   Context used to determine file directory.
-	 * @param dirName   The sub directory name to perform all read/write operations to.
-	 * @param converter Converter used to serialize/deserialize objects.
+	 * @param converter Converter used to serialize/deserialize objects, not
+	 *                  null
+	 * @param directory Directory to write/read files, not null. {@link
+	 *                  File#isDirectory()} must return true on this parameter
 	 */
-	public ClassPersister(Context context, String dirName, Converter converter) {
-		super(context, dirName, converter);
-
-		path = context.getDir(dirName, Context.MODE_PRIVATE);
+	public ClassPersister(Converter converter, File directory) {
+		super(converter, directory);
+		this.directory = directory;
 	}
 
 	public Observable<List<String>> get() {
-		return Observable.defer(() -> Observable.just(Arrays.asList(path.list())));
+		return Observable.defer(() -> Observable.just(Arrays.asList(directory.list())));
 	}
 
 	public void clean() {
 		try {
-			FileUtils.cleanDirectory(path);
+			FileUtils.cleanDirectory(directory);
 		} catch (Throwable t) {
 			Timber.e(t.getMessage(), t);
 		}
 	}
 
 	public long size() {
-		return path.length();
+		return directory.length();
 	}
 
 	public long sizeInBytes() {
-		return FileUtils.sizeOfDirectory(path);
+		return FileUtils.sizeOfDirectory(directory);
 	}
 }

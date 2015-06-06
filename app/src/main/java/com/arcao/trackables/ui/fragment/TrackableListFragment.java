@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 
 import com.arcao.trackables.R;
 import com.arcao.trackables.data.service.AccountService;
+import com.arcao.trackables.data.service.DataSource;
 import com.arcao.trackables.data.service.TrackableService;
+import com.arcao.trackables.exception.ExceptionHandler;
 import com.arcao.trackables.internal.di.HasComponent;
 import com.arcao.trackables.internal.di.component.MainActivityComponent;
 import com.arcao.trackables.internal.rx.AndroidSchedulerTransformer;
@@ -30,6 +32,9 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 
 	@Inject
 	protected TrackableService trackableService;
+
+	@Inject
+	protected ExceptionHandler exceptionHandler;
 
 	@InjectView(R.id.recyclerView)
 	protected RecyclerView mRecyclerView;
@@ -67,9 +72,11 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 		super.onResume();
 
 		if (accountService.isAccount()) {
-			trackableService.getUserTrackables()
+			trackableService.getUserTrackables(DataSource.REMOTE_IF_NECESSARY)
 							.compose(AndroidSchedulerTransformer.get())
-							.subscribe(mAdapter::setTrackables);
+							.subscribe(mAdapter::setTrackables, throwable -> {
+								startActivity(exceptionHandler.handle(throwable));
+							});
 		}
 	}
 }

@@ -19,9 +19,9 @@ public class TrackablePersistenceService {
 
 	@Inject
 	public TrackablePersistenceService(
-					@Named(PersistenceModule.PERSISTANCE_MAIN) ClassPersister mainPersister,
-					@Named(PersistenceModule.PERSISTANCE_TRACKABLE) ClassPersister trackablePersister,
-					@Named(PersistenceModule.PERSISTANCE_TRACKABLE_TRAVEL) ClassPersister trackableTravelListPersister) {
+					@Named(PersistenceModule.PERSISTENCE_MAIN) ClassPersister mainPersister,
+					@Named(PersistenceModule.PERSISTENCE_TRACKABLE) ClassPersister trackablePersister,
+					@Named(PersistenceModule.PERSISTENCE_TRACKABLE_TRAVEL) ClassPersister trackableTravelListPersister) {
 		this.mainPersister = mainPersister;
 		this.trackablePersister = trackablePersister;
 		this.trackableTravelListPersister = trackableTravelListPersister;

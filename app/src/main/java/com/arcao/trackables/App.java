@@ -6,23 +6,25 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
+
 import com.arcao.trackables.internal.di.component.AppComponent;
 import com.arcao.trackables.preference.PreferenceHelper;
 import com.arcao.trackables.ui.util.picasso.CropSquareTransformation;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
-import timber.log.Timber;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 public class App extends Application {
 	private AppComponent component;
 
 	@Inject
-	PreferenceHelper preferenceHelper;
+	protected PreferenceHelper preferenceHelper;
 
 	@Inject
-	Picasso picasso;
+	protected Picasso picasso;
 
 	@Override
 	public void onCreate() {

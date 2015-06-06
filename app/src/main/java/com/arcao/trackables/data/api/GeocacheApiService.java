@@ -4,18 +4,20 @@ import com.arcao.geocaching.api.GeocachingApi;
 import com.arcao.geocaching.api.data.Geocache;
 import com.arcao.geocaching.api.impl.live_geocaching_api.filter.CacheCodeFilter;
 import com.arcao.trackables.internal.rx.OnSubscribePublisher;
-import rx.Observable;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import rx.Observable;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @Singleton
 public class GeocacheApiService {
@@ -65,6 +67,7 @@ public class GeocacheApiService {
 		@Override
 		public void run() {
 			try {
+				//noinspection InfiniteLoopStatement
 				while (true) {
 					List<GeocacheRequest> requests = new ArrayList<>();
 
