@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.android.app.AppObservable;
+import timber.log.Timber;
 
 public class TrackableDetailFragment extends AbstractTrackableFragment {
 	@Inject
@@ -82,7 +83,8 @@ public class TrackableDetailFragment extends AbstractTrackableFragment {
 		goalView.setText(trackable.getGoal());
 
 		if (trackable.getImages().size() > 0) {
-			picasso.load(trackable.getImages().get(0).getUrl()).into(imageView);
+			Timber.d("Loading image: %s", trackable.getImages().get(0).getMobileUrl());
+			picasso.load(trackable.getImages().get(0).getMobileUrl()).into(imageView);
 		} else {
 			imageView.setVisibility(View.GONE);
 		}
