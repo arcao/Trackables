@@ -40,7 +40,10 @@ public class TrackablePersistenceService {
 	}
 
 	public Observable<List<Trackable>> putTrackables(String category, List<Trackable> trackableList) {
-		return mainPersister.putList(category, trackableList, Trackable.class);
+		return mainPersister.putList(category, trackableList, Trackable.class)
+						.flatMap(Observable::from)
+						.flatMap(trackable -> trackablePersister.put(trackable.getTrackingNumber(), trackable))
+						.toList();
 	}
 
 	public Observable<Trackable> getTrackable(String trackingCode) {

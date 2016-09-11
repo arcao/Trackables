@@ -114,9 +114,7 @@ public class TrackableListAdapter extends RecyclerView.Adapter<TrackableListAdap
 				positionTextView.setText(trackable.getCurrentOwner().getUserName());
 			}
 
-			itemView.setOnClickListener(v -> {
-				activity.startActivity(DetailActivity.createIntent(activity, trackable.getTrackingNumber()));
-			});
+			itemView.setOnClickListener(v -> activity.startActivity(DetailActivity.createIntent(activity, trackable.getTrackingNumber())));
 		}
 
 		private void applyIcon(TextView target, IIcon icon) {

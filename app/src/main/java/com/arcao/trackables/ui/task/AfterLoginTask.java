@@ -2,6 +2,7 @@ package com.arcao.trackables.ui.task;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+
 import com.arcao.geocaching.api.data.Trackable;
 import com.arcao.geocaching.api.data.TrackableTravel;
 import com.arcao.geocaching.api.util.GeocachingUtils;
@@ -9,14 +10,14 @@ import com.arcao.trackables.data.service.DataSource;
 import com.arcao.trackables.data.service.GeocacheService;
 import com.arcao.trackables.data.service.TrackableService;
 import com.arcao.trackables.exception.ExceptionHandler;
-import rx.Observable;
-import timber.log.Timber;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import javax.inject.Inject;
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import rx.Observable;
+import timber.log.Timber;
 
 public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.ProgressState, Void> {
 	public  interface TaskListener {
@@ -55,15 +56,14 @@ public class AfterLoginTask extends AsyncTask<Void, AfterLoginTask.TaskListener.
 
 			publishProgress(TaskListener.ProgressState.RETRIEVE_TRACKABLE_TRAVELS);
 
-			Set<String> geocaches = new HashSet<>();
-			for(Trackable trackable : trackables) {
-				List<TrackableTravel> trackableTravels = trackableService.getTrackableTravel(trackable.getTrackingNumber(), DataSource.REMOTE).toBlocking().single();
-
-				for(TrackableTravel trackableTravel : trackableTravels) {
-					if (trackableTravel.getCacheID() > 0)
-						geocaches.add(GeocachingUtils.cacheIdToCacheCode(trackableTravel.getCacheID()));
-				}
-			}
+			List<String> geocaches = Observable.from(trackables).flatMap(trackable -> trackableService.getTrackableTravel(trackable.getTrackingNumber(), DataSource.REMOTE))
+							.flatMap(Observable::from)
+							.filter(trackableTravel -> trackableTravel.getCacheID() > 0)
+							.distinct(TrackableTravel::getCacheID)
+							.flatMap(trackableTravel -> Observable.just(GeocachingUtils.cacheIdToCacheCode(trackableTravel.getCacheID())))
+							.toList()
+							.toBlocking()
+							.single();
 
 			publishProgress(TaskListener.ProgressState.RETRIEVE_GEOCACHES);
 			Observable.from(geocaches).flatMap(geocache -> geocacheService.getGeocache(geocache, DataSource.REMOTE)).toList().toBlocking().single();

@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.internal.util.SubscriptionList;
 
 public class TrackableListFragment extends Fragment implements HasComponent<MainActivityComponent> {
 	@Inject
@@ -40,6 +41,8 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 	protected RecyclerView mRecyclerView;
 	@Inject
 	protected TrackableListAdapter mAdapter;
+
+	private final SubscriptionList subscriptionList = new SubscriptionList();
 
 	public MainActivityComponent component() {
 		return ((MainActivity)getActivity()).component();
@@ -72,11 +75,16 @@ public class TrackableListFragment extends Fragment implements HasComponent<Main
 		super.onResume();
 
 		if (accountService.isAccount()) {
-			trackableService.getUserTrackables(DataSource.REMOTE_IF_NECESSARY)
+			subscriptionList.add(trackableService.getUserTrackables(DataSource.REMOTE_IF_NECESSARY)
 							.compose(AndroidSchedulerTransformer.get())
-							.subscribe(mAdapter::setTrackables, throwable -> {
-								startActivity(exceptionHandler.handle(throwable));
-							});
+							.subscribe(mAdapter::setTrackables, throwable -> startActivity(exceptionHandler.handle(throwable))));
 		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		subscriptionList.unsubscribe();
 	}
 }
